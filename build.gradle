@@ -1,0 +1,14 @@
+subprojects {
+	apply plugin: 'java'
+
+	version = 'trunk'
+
+	repositories {
+		jcenter()
+	}
+
+	sourceSets {
+      main.java.srcDirs = ['src']
+      main.resources.srcDirs = ['src']
+    }
+}
