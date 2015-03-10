@@ -1,14 +1,58 @@
+plugins {
+  id 'com.jfrog.artifactory' version '3.0.1'
+}
+
+allprojects {
+  apply plugin: 'com.jfrog.artifactory'
+  group = 'org.jinterop'
+  version = '3.0'
+
+  repositories {
+    jcenter()
+  }
+
+}
+
 subprojects {
 	apply plugin: 'java'
-
-	version = 'trunk'
-
-	repositories {
-		jcenter()
-	}
+  apply plugin: 'maven-publish'
 
 	sourceSets {
-      main.java.srcDirs = ['src']
-      main.resources.srcDirs = ['src']
+    main.java.srcDirs = ['src']
+    main.resources.srcDirs = ['src']
+  }
+
+  task sourceJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+  }
+
+  artifacts {
+    archives sourceJar
+  }
+
+  publishing {
+    publications {
+      mavenJava(MavenPublication) {
+        from components.java
+        artifact sourceJar
+      }
     }
+  }
+
+  artifactoryPublish {
+    publications ('mavenJava')
+  }
+}
+
+artifactory {
+  contextUrl = artifactory_url
+  publish {
+    repository {
+      repoKey = 'ext-release-local'
+      username = artifactory_user
+      password = artifactory_pass
+      maven = true
+    }
+  }
 }
