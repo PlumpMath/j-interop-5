@@ -14,13 +14,13 @@ allprojects {
 }
 
 subprojects {
-	apply plugin: 'java'
+  apply plugin: 'java'
   apply plugin: 'maven-publish'
 
   sourceCompatibility = '1.6'
   targetCompatibility = '1.6'
 
-	sourceSets {
+  sourceSets {
     main.java.srcDirs = ['src']
     main.resources.srcDirs = ['src']
   }
@@ -48,14 +48,16 @@ subprojects {
   }
 }
 
-artifactory {
-  contextUrl = artifactory_url
-  publish {
-    repository {
-      repoKey = 'ext-release-local'
-      username = artifactory_user
-      password = artifactory_pass
-      maven = true
+if (project.hasProperty('artifactory_url')) {
+  artifactory {
+    contextUrl = artifactory_url
+    publish {
+      repository {
+        repoKey = 'ext-release-local'
+        username = artifactory_user
+        password = artifactory_pass
+        maven = true
+      }
     }
   }
 }
